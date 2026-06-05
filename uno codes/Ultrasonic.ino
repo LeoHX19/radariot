@@ -11,9 +11,9 @@ void setup() {
   pinMode(TRIG, OUTPUT);
   pinMode(ECHO, INPUT);
   pinMode(Buzzer, OUTPUT);
-  pinMode(ServoPin, OUTPUT);
   servo.attach(ServoPin);
   Serial.begin(9600);
+  int pos = 0;
 }
 
 void activateBuzzer() {
@@ -23,17 +23,20 @@ void activateBuzzer() {
 }
 
 void sweepServo() {
-  for (int pos = 0; pos <= 180; pos += 1) {
-    servo.write(pos);
-    checkDistance();
-    Serial.println(pos);
-    delay(15);
-  }
-  for (int pos = 180; pos >= 0; pos -= 1) {
-    servo.write(pos);
-    checkDistance();
-    Serial.println(pos);
-    delay(15);
+  if (pos == 0) {
+    for (; pos <= 180; pos += 1) {
+      servo.write(pos);
+      delay(15);
+      checkDistance();
+      Serial.println(",",pos);
+    }
+  }else {
+    for (; pos > 0; pos -= 1) {
+      servo.write(pos);
+      delay(15);
+      checkDistance();
+      Serial.println(",",pos);
+    }
   }
 }
 
@@ -45,11 +48,15 @@ void checkDistance() {
   digitalWrite(TRIG, LOW);
 
   long duration = pulseIn(ECHO, HIGH, 30000); // 30 ms timeout
-
-  float distance = duration * 0.034 / 2;
-  Serial.println(distance);
-
+  if (duration == 0) {
+    Serial.print("NULL");
+  }else {
+    float distance = duration * 0.034 / 2;
+    Serial.print(distance);
+  }
 }
+
+void 
 
 void loop() {
   sweepServo();
