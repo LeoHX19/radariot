@@ -16,7 +16,28 @@ void setup() {
   Serial.begin(9600);
 }
 
-void loop() {
+void activateBuzzer() {
+  digitalWrite(Buzzer, HIGH);
+  delay(1000); // Buzzer on for 1 second
+  digitalWrite(Buzzer, LOW);
+}
+
+void sweepServo() {
+  for (int pos = 0; pos <= 180; pos += 1) {
+    servo.write(pos);
+    checkDistance();
+    Serial.println(pos);
+    delay(15);
+  }
+  for (int pos = 180; pos >= 0; pos -= 1) {
+    servo.write(pos);
+    checkDistance();
+    Serial.println(pos);
+    delay(15);
+  }
+}
+
+void checkDistance() {
   digitalWrite(TRIG, LOW);
   delayMicroseconds(2);
   digitalWrite(TRIG, HIGH);
@@ -25,13 +46,11 @@ void loop() {
 
   long duration = pulseIn(ECHO, HIGH, 30000); // 30 ms timeout
 
-  if (duration == 0) {
-    Serial.println("No echo received");
-  } else {
-    float distance = duration * 0.034 / 2;
-    Serial.print("Distance: ");
-    Serial.println(distance);
-  }
+  float distance = duration * 0.034 / 2;
+  Serial.println(distance);
 
-  delay(500);
+}
+
+void loop() {
+  sweepServo();
 }
