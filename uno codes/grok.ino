@@ -10,9 +10,9 @@ const int buzzerPin = 12;
 const int SWEEP_START = 0;
 const int SWEEP_END = 180;
 const int STEP_DELAY = 30;        // ms per step during sweep
-const int ANGLE_STEP = 8;         // degrees between samples
-const int DETECTION_THRESHOLD = 150; // cm, objects closer than this
-const int TRACKING_TIME_MS = 3000;   // 3 seconds tracking per object
+const int ANGLE_STEP = 1;         // degrees between samples
+const int DETECTION_THRESHOLD = 500; // cm, objects closer than this
+const int TRACKING_TIME_MS = 1000;   // 3 seconds tracking per object
 const int NUM_READINGS = 8;          // readings during tracking
 const int BEEP_DURATION = 2000;
 
@@ -45,7 +45,7 @@ float getDistance() {
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
   
-  long duration = pulseIn(echoPin, HIGH);
+  long duration = pulseIn(echoPin, HIGH,20000);
   float distance = duration * 0.034 / 2; // cm
   return distance;
 }
@@ -67,16 +67,12 @@ void sweepAndDetect() {
       Serial.print("° dist: "); Serial.println(dist);
     }
   }
-  
-  // Return to center after sweep
-  myServo.write(90);
-  delay(300);
 }
 
 void trackObjects() {
   if (objectCount == 0) return;
   
-  Serial.println("Starting round-robin tracking...");
+  Serial.println("Starting tracking...");
   trackingStartTime = millis();
   
   for (int i = 0; i < objectCount; i++) {
@@ -108,7 +104,6 @@ void trackObjects() {
     Serial.print(" | Now: "); Serial.println(currentDist);
     
     if (currentDist < prevDist - 3) {  // approaching (with some tolerance)
-      Serial.println("→ APPROACHING! Beeping...");
       tone(buzzerPin, 1000, BEEP_DURATION);
       delay(BEEP_DURATION);           // stare while beeping
       // keep staring - servo already at position

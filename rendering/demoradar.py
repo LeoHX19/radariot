@@ -2,7 +2,6 @@ import pygame
 import time
 import math
 import random
-import sys
 
 # ========================= CONFIG =========================
 USE_DUMMY = True              # ← Set to False when Arduino is ready
