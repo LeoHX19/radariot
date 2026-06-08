@@ -4,7 +4,6 @@
   <img src="81DM0ufBhCL.jpg" alt="Radar System Project" width="500">
 </p>
 
-
 ## Components Used
 
 * Arduino UNO
