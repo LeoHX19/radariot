@@ -5,9 +5,6 @@
 </p>
 
 
-| **Project Title** | Radar System using Arduino |
-
-
 ## Components Used
 
 * Arduino UNO
